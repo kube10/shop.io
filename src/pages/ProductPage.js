@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/shopContext";
 import { Text, Div, Container, Row, Button, Col, Input } from "atomize";
+import VariantButton from "../components/product/VariantButton";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -34,40 +35,52 @@ const ProductPage = () => {
           ></Div>
         </Col>
         <Col>
-          <Text>{product.title}</Text>
-          <Text>
+          <Text textWeight="bold" textSize="display1">
+            {product.title}
+          </Text>
+          <Text>{product.description}</Text>
+          <Text textSize="display2">
             € <span id="price">{activeVariant.price}</span>
           </Text>
-          {product.variants.length > 1 && (
+
+          <Div>
+            {product.variants.length > 1 && (
+              <Div>
+                <Text>Select your size</Text>
+                <Div>
+                  {product.variants.map((variant) => (
+                    <VariantButton
+                      key={variant.id}
+                      variant={variant}
+                      activeVariant={activeVariant}
+                      mouseEnter={() => {}}
+                      mouseLeave={() => {}}
+                      click={() => setVariantByIdAsActive(variant.id)}
+                      product={product}
+                    />
+                  ))}
+                </Div>
+              </Div>
+            )}
             <Div>
-              <label>Select your size</label>
-              <select
-                value={activeVariant.id}
-                onChange={(e) => setVariantByIdAsActive(e.target.value)}
-              >
-                {product.variants.map((variant) => {
-                  return (
-                    <option key={variant.id} value={variant.id}>
-                      {variant.title}
-                    </option>
-                  );
-                })}
-              </select>
+              {" "}
+              <Text>Amount:</Text>
+              <Input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(parseInt(e.target.value))}
+              />
             </Div>
-          )}
-          <Input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(parseInt(e.target.value))}
-          />
-          <Button
-            onClick={() => {
-              addItemToCheckout(activeVariant.id, amount);
-              openCart();
-            }}
-          >
-            Add to cart
-          </Button>
+
+            <Button
+              onClick={() => {
+                addItemToCheckout(activeVariant.id, amount);
+                openCart();
+              }}
+            >
+              Add to cart
+            </Button>
+          </Div>
         </Col>
       </Row>
     </Container>

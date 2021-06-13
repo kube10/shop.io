@@ -5,6 +5,7 @@ import ProductPage from "./pages/ProductPage";
 import CollectionPage from "./pages/CollectionPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ShopProvider from "./context/shopContext";
+import DiscountPage from "./pages/DiscountPage";
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           </Route>
           <Route path="/collection/:id">
             <CollectionPage />
+          </Route>
+          <Route path="/discounts">
+            <DiscountPage />
           </Route>
           <Route path="/">
             <HomePage />

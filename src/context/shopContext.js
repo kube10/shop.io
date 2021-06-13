@@ -19,6 +19,7 @@ class ShopProvider extends Component {
     collections: [],
     collection: {},
     checkout: {},
+    pageCount: 0,
     isCartOpen: false,
   };
 
@@ -65,9 +66,12 @@ class ShopProvider extends Component {
     localStorage.setItem("checkout", JSON.stringify(checkout));
   };
 
-  fetchAllProducts = async () => {
+  fetchAllProducts = async (productsPerPage) => {
     const products = await client.product.fetchAll();
+    const pageCount = Math.ceil(products.length / productsPerPage);
+    this.setState({ collection: {} });
     this.setState({ products: products });
+    this.setState({ pageCount: pageCount });
   };
 
   fetchProductById = async (id) => {
@@ -75,6 +79,17 @@ class ShopProvider extends Component {
     const variant = product.variants[0];
     this.setState({ product: product });
     this.setState({ activeVariant: variant });
+  };
+
+  fetchDiscountedProducts = async (productsPerPage) => {
+    const products = await client.product.fetchAll();
+    const discounted = products.filter(
+      (product) => product.variants[0].compareAtPrice != null
+    );
+    const pageCount = Math.ceil(discounted.length / productsPerPage);
+    this.setState({ products: discounted });
+    this.setState({ collection: {} });
+    this.setState({ pageCount: pageCount });
   };
 
   setVariantByIdAsActive = (variantId) => {
@@ -89,9 +104,12 @@ class ShopProvider extends Component {
     this.setState({ collections: collections });
   };
 
-  fetchCollectionById = async (id) => {
+  fetchCollectionById = async (id, productsPerPage) => {
     const collection = await client.collection.fetchWithProducts(id);
+    const pageCount = Math.ceil(collection.products.length / productsPerPage);
     this.setState({ collection: collection });
+    this.setState({ products: collection.products });
+    this.setState({ pageCount: pageCount });
   };
 
   closeCart = async () => {
@@ -109,6 +127,7 @@ class ShopProvider extends Component {
           ...this.state,
           fetchAllProducts: this.fetchAllProducts,
           fetchProductById: this.fetchProductById,
+          fetchDiscountedProducts: this.fetchDiscountedProducts,
           fetchAllCollections: this.fetchAllCollections,
           fetchCollectionById: this.fetchCollectionById,
           setVariantByIdAsActive: this.setVariantByIdAsActive,

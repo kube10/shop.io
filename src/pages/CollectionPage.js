@@ -1,25 +1,18 @@
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/shopContext";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Container, Row, Text } from "atomize";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/product/ProductCard";
+import ProductsLoading from "../components/loadingStates/ProductsLoading";
+import Pagination from "../components/Pagination";
+import ProductsList from "../components/product/ProductsList";
 
 const CollectionPage = () => {
   const { id } = useParams();
-  const { fetchCollectionById, collection } = useContext(ShopContext);
-
-  useEffect(() => fetchCollectionById(id), [fetchCollectionById, id]);
-
-  if (collection.id !== id) return <div>Loading...</div>;
 
   return (
     <Container>
-      <Text textSize="display1">{collection.title}</Text>
-      <Row>
-        {collection.products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </Row>
+      <ProductsList collectionId={id} amountOfItems={8} />
     </Container>
   );
 };

@@ -1,22 +1,10 @@
-import { useContext, useEffect } from "react";
-import { ShopContext } from "../context/shopContext";
-import { Container, Text, Div, Row, Col } from "atomize";
-import { Link } from "react-router-dom";
-import ProductCard from "../components/ProductCard";
+import { Container } from "@material-ui/core";
+import ProductsList from "../components/product/ProductsList";
 
 const HomePage = () => {
-  const { fetchAllProducts, products } = useContext(ShopContext);
-  useEffect(() => {
-    fetchAllProducts();
-  }, [fetchAllProducts]);
-  if (!products) return <div>loading..</div>;
   return (
     <Container>
-      <Row>
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </Row>
+      <ProductsList amountOfItems={10} />
     </Container>
   );
 };
